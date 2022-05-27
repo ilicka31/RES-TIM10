@@ -25,26 +25,26 @@ zahtev3 = {
 "fields": "id; name; surname"
 }
 zahtev3 = {
-"verb": "POST",
+"verb": "PATCH",
 "noun": "/resurs/1",
 "query": "name='seka'; type=1",
 "fields": "id; name; surname"
 }
 zahtev4 = {
-"verb": "POST",
+"verb": "PATCH",
 "noun": "/resurs/1",
 "query": "name='pera'; type=1",
 "fields": "id; name; surname"
 }
 
 zahtev5 = {
-"verb": "POST",
+"verb": "DELETE",
 "noun": "/resurs/1",
 "query": "name='jeka'; type=1",
 "fields": "id; name; surname"
 }
 zahtev6 = {
-"verb": "POST",
+"verb": "DELETE",
 "noun": "/resurs/1",
 "query": "name='pera'; type=1",
 "fields": "id; name; surname"
@@ -57,7 +57,7 @@ zahtev7 = {
 }
 
 zahtev8 = {
-"verb": "POST",
+"verb": "DELETE",
 "noun": "/resurs/1",
 "query": "name='pera'; type=1",
 "fields": "id; name; surname"
