@@ -6,7 +6,7 @@ def format():
     # returns JSON object as 
     # a dictionary
     data = json.load(f)
-
+    
     # Iterating through the json
     # list
     verb = False
