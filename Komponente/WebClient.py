@@ -5,6 +5,7 @@ sys.path.append("..")
 from Komponente.formatiranje import *
 from Komponente.Zahtevi import *
 from Model.Resurs import *
+
 import socket
 import random
 import time
@@ -21,7 +22,7 @@ while br < 10:
     MESSAGE =str(random.choice(zahtevi))
     s.send(MESSAGE.encode())
     br= br+1
-    time.sleep(3)
+    time.sleep(1)
     
 
 

@@ -1,14 +1,14 @@
 import json
 
 zahtev = {
-"verb": "GET",
+"verb": "CAO",
 "noun": "/resurs/1",
 "query": "name='pera'; type=1",
 "fields": "id; name; surname"
 }
 zahtev1 = {
 "verb": "GET",
-"noun": "/resurs/1",
+"noun": "",
 "query": "name='jova'; type=1",
 "fields": "id; name; surname"
 }

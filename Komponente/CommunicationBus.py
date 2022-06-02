@@ -1,12 +1,12 @@
 #DA BI MOGLI DA PRISTUPAMO KLASAMA I FAJLOVIMA
 #IZ DRUIH FOLDERA
-#import sys
-#sys.path.append("..")
-#from Komponente.formatiranje import *
-#from Komponente.Zahtevi import *
-#from Model.Resurs import *
+import sys
+import json
+sys.path.append("..")
+from Komponente.formatiranje import format
+from Model.Resurs import *
+from Komponente.JsonXmlAdapter import *
 
-#PRAVLJENJE SOKETA ZA KOMUNIKACIJU
 import random
 import socket
 import time
@@ -21,11 +21,18 @@ s.listen(0)
 
 conn, addr = s.accept()
 print('Connection address:', addr)
-
+p=0
 while 1:
     data = conn.recv(BUFFER_SIZE)
     if not data: break
-    print ("received data:", data.decode(), "\n")
+
+    z= format(data)
+    if( z == True):
+        print ("received data:", z , "\n")
+        print(ToXml(data,p))
+        p=1
+        
+
    
    # conn.send(data)  # echo
 conn.close()
