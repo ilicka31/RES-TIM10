@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from Komponente.repozitorijum import *
 #import mysql.connector
 
 #ovde treba da imam vezu sa bazom i jedan fajl u kom cu
