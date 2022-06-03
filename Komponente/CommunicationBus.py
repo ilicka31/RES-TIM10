@@ -6,6 +6,7 @@ sys.path.append("..")
 from Komponente.formatiranje import format
 from Model.Resurs import *
 from Komponente.JsonXmlAdapter import *
+from Komponente.XmlDataBaseAdapter import ToSql
 
 import random
 import socket
@@ -26,11 +27,15 @@ while 1:
     data = conn.recv(BUFFER_SIZE)
     if not data: break
 
-    z= format(data)
-    if( z == True):
-        print ("received data:", z , "\n")
-        print(ToXml(data,p))
+    z=format(data)
+    if(z):
+        xml=ToXml(data,p)
+        print("received data:", z, "\n")
+        print(xml)
         p=1
+        data=ToJson(ToSql(xml))
+        conn.send(data)
+   
         
 
    
