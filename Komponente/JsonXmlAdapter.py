@@ -1,20 +1,15 @@
-import xmltodict
-import json
+from dicttoxml import dicttoxml
+import xmltodict 
+from json import *
 
-def ToXml(z,p):
-   if(p==0):
-      z = {'root':z}
-   ret = xmltodict.unparse(z)
- # ret= ret.replace("<root>","")
-  # ret= ret.replace("</root>","")
-   return ret
+def ToXmlFromJson(zahtev):
+   obj = dumps(zahtev)
+   z = dicttoxml(loads(obj), attr_type=False)
+   return z
 
-
-def ToJson(x):
-   dict = xmltodict.parse(x)
-   ret = json.loads(json.dumps(dict))
-   return ret
-
-
-
-
+def ToJsonFromXml(zahtevXml):
+   obj = xmltodict.parse(zahtevXml)
+   j =dumps(obj)
+   j= j.replace('{"root":','')
+   j= j[:len(j)-1]
+   return j

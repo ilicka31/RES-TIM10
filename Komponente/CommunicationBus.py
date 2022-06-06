@@ -1,12 +1,10 @@
-#DA BI MOGLI DA PRISTUPAMO KLASAMA I FAJLOVIMA
-#IZ DRUIH FOLDERA
 import sys
-import json
+import ast
 sys.path.append("..")
 from Komponente.formatiranje import format
 from Model.Resurs import *
 from Komponente.JsonXmlAdapter import *
-from Komponente.XmlDataBaseAdapter import ToSql
+from Komponente.XmlDataBaseAdapter import ToSql, BackToXml
 
 import random
 import socket
@@ -21,24 +19,17 @@ s.bind((TCP_IP, TCP_PORT))
 s.listen(0)
 
 conn, addr = s.accept()
-print('Connection address:', addr)
-p=0
+print('Connection address:', addr,"\n")
 while 1:
     data = conn.recv(BUFFER_SIZE)
     if not data: break
-
-    z=format(data)
+    j =ast.literal_eval(data.decode('utf-8'))
+    z = format(j)
     if(z):
-        xml=ToXml(data,p)
-        print("received data:", z, "\n")
-        print(xml)
-        p=1
-        data=ToJson(ToSql(xml))
-        conn.send(data)
-   
+        xml = ToXmlFromJson(j)
+        ToSql(xml) #poslao je u drugi adapter koji komunicira sa bazom
         
-
-   
-   # conn.send(data)  # echo
+        odgovor = BackToXml()
+        conn.send(odgovor)
 conn.close()
 

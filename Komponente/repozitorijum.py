@@ -7,7 +7,7 @@ try:
     connection = mysql.connector.connect(host='localhost',
                                         database='repozitorijum',
                                         user='root',
-                                        password='vlada991')
+                                        password='root')
     if connection.is_connected():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server verison ", db_Info)

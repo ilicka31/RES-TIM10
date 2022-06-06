@@ -1,10 +1,9 @@
 def format(data):
-    print(data)
     verb = False
     noun = False
-    if(data[0] == "GET" or data[0]  == "POST" or data[0]  == "PATCH" or data[0]  == "DELETE"):
+    if(data['verb'] == "GET" or data['verb']  == "POST" or data['verb']  == "PATCH" or data['verb']  == "DELETE"):
         verb = True
-    if(data[1] != ""):
+    if(data['noun'] != ""):
         noun = True
 
     if(noun == True and verb == True):

@@ -22,10 +22,10 @@ while br < 10:
     MESSAGE =str(random.choice(zahtevi))
     s.send(MESSAGE.encode())
     br= br+1
-    time.sleep(1)
+    time.sleep(3)
     
-
-
+odgovor = s.recv(BUFFER_SIZE)
+print(odgovor)
 #mora encode jer prima byte a ne string
 
 s.close()
