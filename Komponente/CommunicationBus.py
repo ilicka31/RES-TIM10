@@ -28,7 +28,6 @@ while 1:
     if(z):
         xml = ToXmlFromJson(j)
         ToSql(xml) #poslao je u drugi adapter koji komunicira sa bazom
-        
         odgovor = BackToXml()
         conn.send(odgovor)
 conn.close()
