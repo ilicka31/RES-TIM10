@@ -1,11 +1,11 @@
 import xml.etree.ElementTree as ET
-from Komponente.repozitorijum import *
-#import mysql.connector
+from Komponente.repozitorijum import connection
+import mysql.connector
 
 #ovde treba da imam vezu sa bazom i jedan fajl u kom cu
 #privremeno da cuvam xml parsiran iz JSON-a
 
-def ToSql(tableName):
+def ToSql():
     tree = ET.parse('Temp.xml')
     data2 = tree.findall('request')
 
@@ -17,20 +17,26 @@ def ToSql(tableName):
         query = i.find('query').text
         fields = i.find('fields').text
 
-        if(noun == tableName):
-            if(verb == 'GET'):
-                sqlZahtev = "select " + fields + " from " + noun + " where " + query;
+        
+        if(verb == 'GET'):
+            sqlZahtev = "select " + fields + " from " + noun + " where " + query;
 
-            if(verb == 'POST'):
-                sqlZahtev = "insert into " + tableName + " ( " + fields + " ) VALUES ( " + query + " )";
+        if(verb == 'POST'):
+            sqlZahtev = "insert into " + noun + " ( " + fields + " ) VALUES ( " + query + " )";
             
-            if(verb == 'DELETE'):
-                sqlZahtev = "delete from " + tableName + " where " + query;
+        if(verb == 'DELETE'):
+            sqlZahtev = "delete from " + noun + " where " + query;
 
-            if(verb == 'PATCH'):
-                sqlZahtev = "update " + tableName + " set " + query;
+        if(verb == 'PATCH'):
+            sqlZahtev = "update " + noun + " set " + query;
 
-        return sqlZahtev
+    return sqlZahtev
+
+def PosaljiZahtev(sqlZahtev):
+    odgovor = ""
+
+    #salje sql na repozitorijum i preuzima odgovor iz repozitorijuma
+    return odgovor
 
 def BackToXml(sqlOdgovor):
     
@@ -39,5 +45,17 @@ def BackToXml(sqlOdgovor):
     status_code = ""
     payload = ""
     xmlOdgovor = "<status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload>";
+
+    return xmlOdgovor
+
+
+def XmlAdapter():
+
+    sqlRequest = ToSql()
+
+    #konekcija sa repo u metodi posalji zahtev
+    odgovor = PosaljiZahtev(sqlRequest)
+
+    xmlOdgovor = BackToXml(odgovor)
 
     return xmlOdgovor
