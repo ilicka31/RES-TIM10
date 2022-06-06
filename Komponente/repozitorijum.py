@@ -2,6 +2,7 @@ from multiprocessing import connection
 import mysql.connector
 from mysql.connector import Error
 from setuptools import find_namespace_packages
+#from Komponente.XmlDataBaseAdapter import *
 
 try:
     connection = mysql.connector.connect(host='localhost',
