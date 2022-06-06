@@ -41,6 +41,7 @@ def PosaljiZahtev(sqlZahtev):
 def BackToXml(sqlOdgovor):
     
     #preuzmi odgovor iz baze (kog je formata?) i dobavi vrednosti ovih polja:
+
     status = ""
     status_code = ""
     payload = ""
