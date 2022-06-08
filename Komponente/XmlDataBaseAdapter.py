@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from typing import ByteString
 import xml.etree.ElementTree as ET
 from Komponente.repozitorijum import connection
 import mysql.connector
@@ -6,8 +7,14 @@ import mysql.connector
 #ovde treba da imam vezu sa bazom i jedan fajl u kom cu
 #privremeno da cuvam xml parsiran iz JSON-a
 
+def upisi(data):
+    data1 = data.decode("utf-8") 
+    open("Temp.xml", "w").write(data1)
+
+
 def ToSql(data):
-    tree = ET.parse(data)   #parsira direkt iz prethodnog adaptera
+    upisi(data)
+    tree = ET.parse("Temp.xml")   #parsira direkt iz prethodnog adaptera
     data2 = tree.findall('request')
 
     sqlZahtev = ""
@@ -41,7 +48,7 @@ def ToSql(data):
 
     return sqlZahtev
 
-def BackToXml(sqlZahtev):
+def BackToXml():
     
     #preuzmi odgovor iz baze (kog je formata?) i dobavi vrednosti ovih polja:
     #koneektuje se na repo, posalje sqlZahtev koji je prosledjen i preuzme odgovor koji se dalje parsira

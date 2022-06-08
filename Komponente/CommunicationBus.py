@@ -29,6 +29,10 @@ while 1:
         xml = ToXmlFromJson(j)
         ToSql(xml) #poslao je u drugi adapter koji komunicira sa bazom
         odgovor = BackToXml()
-        conn.send(odgovor)
+
+        odgovorBytes = str.encode(odgovor)
+        type(odgovorBytes) # ensure it is byte representation
+
+        conn.send(odgovorBytes)
 conn.close()
 
