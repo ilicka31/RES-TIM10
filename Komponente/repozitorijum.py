@@ -1,3 +1,4 @@
+from doctest import OutputChecker
 from multiprocessing import connection
 import mysql.connector
 from mysql.connector import Error
@@ -13,7 +14,7 @@ try:
     connection = mysql.connector.connect(host='localhost',
                                         database='repozitorijum',
                                         user='root',
-                                        password='root')
+                                        password='lana.slovic24')
     if connection.is_connected():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server verison ", db_Info)
@@ -46,7 +47,21 @@ print('Connection address:', addrAdapter,"\n")
 sqlzahtev = connAdapter.recv(BUFFER_SIZE)
 #ovde samo izvrsiti direktno na bazu upit i kad se vrate ti podaci vratiti ih adapteru
 #connAdapter.send(PODACI KOJI SU SE VRATILI)
+try:
+    cursor.execute(sqlzahtev)
+    #cursor.fetchall();
+    records = cursor.fetchall()
+    print("Total number of rows in table: ", cursor.rowcount)
 
-#cursor.execute(sqlzahtev)
-#connAdapter.send()
+    print("\nPrinting each row")
+    for row in records:
+        print("Id = ", row[0], )
+        print("Naziv = ", row[1])
+        print("Opis  = ", row[2], "\n")
+        #print("Tip  = ", row[3], "\n")
+
+except mysql.connector.Error as e:
+    print("Error reading data from MySQL table", e)
+
+connAdapter.send()
 connAdapter.close()
