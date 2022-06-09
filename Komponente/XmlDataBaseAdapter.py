@@ -1,11 +1,14 @@
 from asyncio.windows_events import NULL
 from typing import ByteString
 import xml.etree.ElementTree as ET
-from Komponente.repozitorijum import connection
 import mysql.connector
 
 #ovde treba da imam vezu sa bazom i jedan fajl u kom cu
 #privremeno da cuvam xml parsiran iz JSON-a
+
+import socket
+import random
+import time
 
 def upisi(data):
     data1 = data.decode("utf-8") 
@@ -60,4 +63,28 @@ def BackToXml():
 
     return xmlOdgovor
 
+####KONEKCIJA SA COMMBUS
+TCP_IP = '127.0.0.1'
+TCP_PORT = 5005
+BUFFER_SIZE = 1024
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TCP_IP, TCP_PORT))
 
+xmlzahtev = s.recv(BUFFER_SIZE)
+sqlzahtev = ToSql(xmlzahtev)
+
+####KONEKCIJA SA REP
+TCP_PORT2 = 8007
+s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s2.bind((TCP_IP, TCP_PORT2))
+s2.listen(0)
+
+conn2, addr2 = s2.accept()
+print('Connection address:', addr2,"\n")
+
+conn2.send(sqlzahtev)
+
+#treba da dobije odgovor od rep zatim da prebaci u XML format i posalje nazad CommBus
+
+#conn.close()
+conn2.close()
