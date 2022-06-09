@@ -13,7 +13,7 @@ try:
     connection = mysql.connector.connect(host='localhost',
                                         database='repozitorijum',
                                         user='root',
-                                        password='vlada991')
+                                        password='root')
     if connection.is_connected():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server verison ", db_Info)
@@ -33,14 +33,20 @@ except Error as e:
 
 
 ####KONEKCIJA SA XMLADAPTEROM
-TCP_IP = '127.0.0.1'
+TCP_IP = socket.gethostname()
 TCP_PORT2 = 8007
 BUFFER_SIZE = 1024
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT2))
+s.bind((TCP_IP, TCP_PORT2))
+s.listen(0)
 
-sqlzahtev = s.recv(BUFFER_SIZE)
-print(sqlzahtev)
+connAdapter, addrAdapter = s.accept()
+print('Connection address:', addrAdapter,"\n")
+
+sqlzahtev = connAdapter.recv(BUFFER_SIZE)
+#ovde samo izvrsiti direktno na bazu upit i kad se vrate ti podaci vratiti ih adapteru
+#connAdapter.send(PODACI KOJI SU SE VRATILI)
+
 #cursor.execute(sqlzahtev)
-
-s.close()
+#connAdapter.send()
+connAdapter.close()

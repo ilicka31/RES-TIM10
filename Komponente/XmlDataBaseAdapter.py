@@ -63,28 +63,34 @@ def BackToXml():
 
     return xmlOdgovor
 
+
+
 ####KONEKCIJA SA COMMBUS
-TCP_IP = '127.0.0.1'
-TCP_PORT = 5005
+TCP_IP = socket.gethostname()
+TCP_PORT = 5006
 BUFFER_SIZE = 1024
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT))
+scommbus = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try:
+    scommbus.connect((TCP_IP, TCP_PORT))
+except socket.error as e:
+    print(str(e))
 
-xmlzahtev = s.recv(BUFFER_SIZE)
-sqlzahtev = ToSql(xmlzahtev)
+#ovde se iz commbusa prtima xml zahtev
+xmlzahtev = scommbus.recv(BUFFER_SIZE)
+#treba da ga pretvori u sql i posalje repozitorijumu
+#sqlzahtev = ToSql(xmlzahtev)
 
-####KONEKCIJA SA REP
+####KONEKCIJA SA REP isto ce mu biti klijent!!
 TCP_PORT2 = 8007
-s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s2.bind((TCP_IP, TCP_PORT2))
-s2.listen(0)
+srep = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+srep.connect((TCP_IP, TCP_PORT2))
+#poslace sqlzahtev repozitorijumu koji on treba da obradi i vrati podatke
+#srep.send(sqlzahtev)
+#nad ovim podacima treba izvrsiti back to xml i onda ih vratiti commbusu
 
-conn2, addr2 = s2.accept()
-print('Connection address:', addr2,"\n")
+vraceniPodaci = srep.recv(BUFFER_SIZE)
+print(vraceniPodaci)
+#scommbus.send(vraceniPodaci)
 
-conn2.send(sqlzahtev)
-
-#treba da dobije odgovor od rep zatim da prebaci u XML format i posalje nazad CommBus
-
-#conn.close()
-conn2.close()
+srep.close()
+scommbus.close()

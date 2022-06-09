@@ -9,7 +9,7 @@ from Model.Resurs import *
 import socket
 import random
 import time
-TCP_IP = '127.0.0.1'
+TCP_IP = socket.gethostname()
 TCP_PORT = 5005
 BUFFER_SIZE = 1024
 zahtevi=[zahtev1, zahtev2, zahtev3, zahtev4,zahtev5, zahtev6, zahtev7, zahtev8]
@@ -26,10 +26,12 @@ while br < 10:
     s.send(MESSAGE.encode())
     print(f"poslato poruka {br}")
     br= br+1
+    odgovor = s.recv(BUFFER_SIZE)
+    print(odgovor)
     time.sleep(3)
     
-odgovor = s.recv(BUFFER_SIZE)
-print(odgovor)
+
+
 #mora encode jer prima byte a ne string
 
 s.close()
