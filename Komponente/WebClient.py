@@ -16,11 +16,15 @@ zahtevi=[zahtev1, zahtev2, zahtev3, zahtev4,zahtev5, zahtev6, zahtev7, zahtev8]
 br =0
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT))
+try:
+    s.connect((TCP_IP, TCP_PORT))
+except socket.error as e:
+    print(str(e))
 
 while br < 10:
     MESSAGE =str(random.choice(zahtevi))
     s.send(MESSAGE.encode())
+    print(f"poslato poruka {br}")
     br= br+1
     time.sleep(3)
     
