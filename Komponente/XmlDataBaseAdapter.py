@@ -171,17 +171,17 @@ sqlzahtev = ToSql(xmlzahtev)
 ####KONEKCIJA SA REP isto ce mu biti klijent!!
 TCP_PORT2 = 8007
 srep = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-srep.connect((TCP_IP, TCP_PORT2))
+#srep.connect((TCP_IP, TCP_PORT2))
 #poslace sqlzahtev repozitorijumu koji on treba da obradi i vrati podatke
 
 sqlReq = sqlzahtev.encode('utf-8')
-srep.send(sqlReq)
+#srep.send(sqlReq)
 #nad ovim podacima treba izvrsiti back to xml i onda ih vratiti commbusu
 
-vraceniPodaci = srep.recv(BUFFER_SIZE)
-print(vraceniPodaci)
+#vraceniPodaci = srep.recv(BUFFER_SIZE)
+#print(vraceniPodaci)
 
-print(BackToXml(vraceniPodaci))
+#print(BackToXml(vraceniPodaci))
 #scommbus.send(vraceniPodaci)
 
 
