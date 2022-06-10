@@ -16,10 +16,6 @@ import re
 import sys
 
 def ToSql(data):
-    #upisi(data)
-    #tree = ET.parse("Temp.xml")   #parsira direkt iz prethodnog adaptera
-    #data2 = tree.findall('request')
-
     sqlZahtev = ""
     verb = ""
     noun = ""
@@ -67,21 +63,44 @@ def ToSql(data):
                     glagol = glagol[i : l2]
                     break
 
-
+    polja = ""
+    vrednosti = ""
+    poljaL = []
+    vrednostiL = []
     if(query != ""):
-        # polja = ""
-        # vrednosti = []
-        # l = len(query)
-        # for i in range(0, l):
-        #     if(query[i] == '='):
-        #         polja = query[0:i-1] + ", "
-        #         query = query[i : len(query)]
-        #     if(query[i] == ';'):
-        #         vrednosti = query[0 : i]
-        #         query = query[i : len(query)]
-        #     l = len(query)
-        query = query.replace(';', " AND")
+        jednako = 0
+        zarez = 0
+        l = len(query)
+        for i in range(0, l+1):
+            if(query[i] == '='):
+                if(zarez==0):
+                    polja = polja + query[zarez:i]
+                else:
+                    polja = polja + ", " + query[zarez+1:i]
+                jednako = i
+                poljaL.append(query[zarez:i])
+            if(query[i] == ';'):
+                if(vrednosti == ""):
+                     vrednosti = vrednosti + query[jednako+1 : i]
+                else:
+                    vrednosti = vrednosti + ", " + query[jednako+1 : i]
+                vrednostiL.append(query[jednako+1 : i])
+                zarez = i
+            if(i == l-1):
+                if(vrednosti == ""):
+                     vrednosti = vrednosti + query[jednako+1 : i]
+                else:
+                    vrednosti = vrednosti + ", " + query[jednako+1 : i+1]
+                vrednostiL.append(query[jednako+1 : i])
+                break
         
+    uslov = ""
+    if("id" in poljaL):
+        for i in range(0, len(poljaL)):
+            if(poljaL[i] == "id"):
+                uslov = poljaL[i] + '=' + vrednostiL[i] + ";"
+
+    #izmena = query - uslov[0:len(uslov)-1]
 
     if(fields != ""):
         fields = fields.replace(';', ',')
@@ -90,33 +109,41 @@ def ToSql(data):
 
     if(verb == 'GET'):
         if(query != ""):
-            sqlZahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query;
+            sqlZahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query.replace(";", " AND ");
         else:
             sqlZahtev = "SELECT" + fields + "FROM " + noun;
     elif(verb == 'POST'):
-        
-        sqlZahtev = "INSERT INTO " + noun + "(" + fields + ")" + " VALUES "; #treba da se dovrsi
+        sqlZahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")"; #treba da se dovrsi
     elif(verb == 'PATCH'):
-        sqlZahtev = 'UPDATE ' + noun + ' SET ' + query;
+        sqlZahtev = 'UPDATE ' + noun + ' SET ' + query.replace(";", ",") + ' WHERE ' + uslov;
     elif(verb == 'DELETE'):
-        sqlZahtev = 'DELETE ' + fields +  'FROM ' + noun + " WHERE " + query;
+        sqlZahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ");
     else:
         print("Neadekvatan xml zahtev")
 
 
     return sqlZahtev
 
-def BackToXml():
+def BackToXml(poruka):
     
     #preuzmi odgovor iz baze (kog je formata?) i dobavi vrednosti ovih polja:
     #koneektuje se na repo, posalje sqlZahtev koji je prosledjen i preuzme odgovor koji se dalje parsira
 
     #1054 (42S22) exception code ukazuje na nepostojeca polja i kolone, tj los format zahteva
-
-
+    
+    poruka = poruka.decode('utf-8')
     status = ""
     status_code = ""
     payload = ""
+    if("Number of rows affected" in poruka):
+        status = 'SUCCESS'
+        status_code = '5000'
+        payload = poruka
+    elif("Error reading data from MySQL table" in poruka):
+        status = 'BAD_FORMAT'
+        status_code = '2000'
+        payload = poruka
+    
     xmlOdgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>";
 
     return xmlOdgovor
@@ -137,23 +164,26 @@ BUFFER_SIZE = 1024
 #xmlzahtev = scommbus.recv(BUFFER_SIZE)
 #treba da ga pretvori u sql i posalje repozitorijumu
 #probni xmlZahtev 
-#xmlzahtev = "<request><verb>GET</verb><noun>resurs</noun><query>naziv='mika'; tip='1'</query><fields>id; naziv; opis</fields></request>"
-xmlzahtev = ""
+xmlzahtev = "<request><verb>GET</verb><noun>resurs</noun><query>id=5;naziv='mika'</query><fields>id; naziv; surname</fields></request>"
+#xmlzahtev = ""
 sqlzahtev = ToSql(xmlzahtev)
 
 ####KONEKCIJA SA REP isto ce mu biti klijent!!
 TCP_PORT2 = 8007
 srep = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-srep.connect((TCP_IP, TCP_PORT2))
+#srep.connect((TCP_IP, TCP_PORT2))
 #poslace sqlzahtev repozitorijumu koji on treba da obradi i vrati podatke
 
 sqlReq = sqlzahtev.encode('utf-8')
-srep.send(sqlReq)
+#srep.send(sqlReq)
 #nad ovim podacima treba izvrsiti back to xml i onda ih vratiti commbusu
 
-vraceniPodaci = srep.recv(BUFFER_SIZE)
-print(vraceniPodaci)
+#vraceniPodaci = srep.recv(BUFFER_SIZE)
+#print(vraceniPodaci)
+
+#print(BackToXml(vraceniPodaci))
 #scommbus.send(vraceniPodaci)
+
 
 srep.close()
 #scommbus.close()
