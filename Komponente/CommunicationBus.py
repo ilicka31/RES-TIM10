@@ -22,26 +22,22 @@ s2.listen(0)
 connClient, addrClient = s.accept()
 print('Connection address:', addrClient,"\n")
 
-connAdapter, addrAdapter = s2.accept() #bilo s ovde
+connAdapter, addrAdapter = s2.accept() 
 print('Connection address:', addrAdapter,"\n")
 
 while 1:
     data = connClient.recv(BUFFER_SIZE)
-    print(data)
     if not data: 
-       break
+        print("Svi zahtevi su obradjeni!")
+        break
+
     j =ast.literal_eval(data.decode('utf-8'))
     z = format(j)
     if(z):
         xml = ToXmlFromJson(j)
-        connAdapter.send(xml)  #salje dataadapteru da odradi ToSql(xml)
-        #poslao je u drugi adapter koji komunicira sa bazom
-        #  i od njega treba da primi odgovor
-        xmlodgovor = connAdapter.recv(BUFFER_SIZE)#BackToXml()
-        #odgovorBytes = str.encode(xmlodgovor)
-        #type(odgovorBytes) # ensure it is byte representation
-        #ne znam sta je ovo dvoje iznad
+        connAdapter.send(xml)  
+        xmlodgovor = connAdapter.recv(BUFFER_SIZE)
         odgovorBytes = ToJsonFromXml(xmlodgovor)
-        connClient.send(odgovorBytes) #vraca clientu json
+        connClient.send(odgovorBytes.encode())
 connAdapter.close()
 connClient.close()

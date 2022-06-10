@@ -106,18 +106,18 @@ def ToSql(data):
         fields = fields.replace(';', ',')
     else:
         fields = '*'
-
     if(verb == 'GET'):
         if(query != ""):
-            sqlZahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query.replace(";", " AND ");
+            sqlZahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query.replace(";", " AND ")
         else:
-            sqlZahtev = "SELECT" + fields + "FROM " + noun;
+            sqlZahtev = "SELECT" + fields + "FROM " + noun
     elif(verb == 'POST'):
-        sqlZahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")"; #treba da se dovrsi
+        sqlZahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")" #treba da se dovrsi
     elif(verb == 'PATCH'):
-        sqlZahtev = 'UPDATE ' + noun + ' SET ' + query.replace(";", ",") + ' WHERE ' + uslov;
+      
+        sqlZahtev = 'UPDATE ' + noun + ' SET ' + fields.replace(";", ", ") + ' WHERE ' + query.replace(";"," AND ")  
     elif(verb == 'DELETE'):
-        sqlZahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ");
+        sqlZahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ")
     else:
         print("Neadekvatan xml zahtev")
 
@@ -152,38 +152,44 @@ def BackToXml(poruka):
 
 ####KONEKCIJA SA COMMBUS
 TCP_IP = socket.gethostname()
-# TCP_PORT = 5006
+TCP_PORT = 5006
 BUFFER_SIZE = 1024
-# scommbus = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# try:
-#     scommbus.connect((TCP_IP, TCP_PORT))
-# except socket.error as e:
-#     print(str(e)) 
+scommbus = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try:
+    scommbus.connect((TCP_IP, TCP_PORT))
+except socket.error as e:
+    print(str(e)) 
 
-#ovde se iz commbusa prtima xml zahtev
-#xmlzahtev = scommbus.recv(BUFFER_SIZE)
-#treba da ga pretvori u sql i posalje repozitorijumu
-#probni xmlZahtev 
-xmlzahtev = "<request><verb>GET</verb><noun>resurs</noun><query>id=5;naziv='mika'</query><fields>id; naziv; surname</fields></request>"
-#xmlzahtev = ""
-sqlzahtev = ToSql(xmlzahtev)
-
-####KONEKCIJA SA REP isto ce mu biti klijent!!
+####KONEKCIJA SA REP 
 TCP_PORT2 = 8007
 srep = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#srep.connect((TCP_IP, TCP_PORT2))
-#poslace sqlzahtev repozitorijumu koji on treba da obradi i vrati podatke
+try:
+    srep.connect((TCP_IP, TCP_PORT2))
+except socket.error as e:
+    print(str(e)) 
 
-sqlReq = sqlzahtev.encode('utf-8')
-#srep.send(sqlReq)
-#nad ovim podacima treba izvrsiti back to xml i onda ih vratiti commbusu
+while 1:
+    xmlzahtev = scommbus.recv(BUFFER_SIZE)
+    if not xmlzahtev: 
+       print("Puko sam jer nista nije stiglo")
+       break
 
-#vraceniPodaci = srep.recv(BUFFER_SIZE)
-#print(vraceniPodaci)
+    xmlzahtev = xmlzahtev.decode()
+    xmlzahtev = xmlzahtev.replace("&apos;","'")
+    xmlzahtev = xmlzahtev.replace('<?xml version="1.0" encoding="UTF-8" ?>','')
+    xmlzahtev = xmlzahtev.replace('<root>', '<request>')
+    xmlzahtev = xmlzahtev.replace('</root>', '</request>')  
 
-#print(BackToXml(vraceniPodaci))
-#scommbus.send(vraceniPodaci)
-
+#xmlzahtev = "<request><verb>GET</verb><noun>resurs</noun><query>id=5;naziv='mika'</query><fields>id; naziv; surname</fields></request>"
+    sqlzahtev = ToSql(xmlzahtev)
+    print("SQLZAHTEVV")
+    print(sqlzahtev)
+    if not sqlzahtev:
+       break
+    srep.send(sqlzahtev.encode())
+    vraceniPodaci = srep.recv(BUFFER_SIZE)
+    vraceniPodaci = BackToXml(vraceniPodaci)
+    scommbus.send(vraceniPodaci.encode())
 
 srep.close()
-#scommbus.close()
+scommbus.close()

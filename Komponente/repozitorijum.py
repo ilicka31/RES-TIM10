@@ -3,16 +3,11 @@ from multiprocessing import connection
 import mysql.connector
 from mysql.connector import Error
 from setuptools import find_namespace_packages
-#from Komponente.XmlDataBaseAdapter import *
-
 import socket
-import random
-import time
-
 
 try:
     connection = mysql.connector.connect(host='localhost',
-                                        database='repozitorijum',
+                                        database='repo',
                                         user='root',
                                         password='root')
     if connection.is_connected():
@@ -46,31 +41,33 @@ s.listen(0)
 connAdapter, addrAdapter = s.accept()
 print('Connection address:', addrAdapter,"\n")
 
-sqlzahtev = connAdapter.recv(BUFFER_SIZE)
+while 1:
+    sqlzahtev = connAdapter.recv(BUFFER_SIZE)
+    if not sqlzahtev:
+        print("Puko sam jer nije stiglo nista")
+        break
 
+    try:
+        cursor.execute(sqlzahtev)
+        cursor.fetchall()
+        #results = connection.cmd_query(sqlzahtev)
+        records = cursor.fetchall()
+        print("Total number of rows affected: ", cursor.rowcount)
 
-#ovde samo izvrsiti direktno na bazu upit i kad se vrate ti podaci vratiti ih adapteru
-#connAdapter.send(PODACI KOJI SU SE VRATILI)
-try:
-    cursor.execute(sqlzahtev)
-    cursor.fetchall();
-    #results = connection.cmd_query(sqlzahtev)
-    records = cursor.fetchall()
-    print("Total number of rows affected: ", cursor.rowcount)
+        rCnt = 0
+        if(records):
+            for row in records:
+                rCnt += 1
+                poruka = "Rows affected: \n"
+                poruka = poruka + rCnt + '. ' + row[0] + row[1] + row[2] + row[3]
+        else:
+            rCnt = cursor.rowcount
+            poruka = "Number of rows affected: " + str(rCnt);        
+
+    except mysql.connector.Error as e:
+        print("Error reading data from MySQL table", e)
+        poruka = "Error reading data from MySQL table: " + e.msg
+
+    connAdapter.send(poruka.encode('utf-8'))
     
-    rCnt = 0
-    if(records):
-        for row in records:
-            rCnt += 1
-            poruka = "Rows affected: \n"
-            poruka = poruka + rCnt + '. ' + row[0] + row[1] + row[2] + row[3]
-    else:
-        rCnt = cursor.rowcount
-        poruka = "Number of rows affected: " + str(rCnt);        
-
-except mysql.connector.Error as e:
-    print("Error reading data from MySQL table", e)
-    poruka = "Error reading data from MySQL table: " + e.msg
-
-connAdapter.send(poruka.encode('utf-8'))
 connAdapter.close()
