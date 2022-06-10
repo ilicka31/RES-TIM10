@@ -48,21 +48,40 @@ while 1:
         break
 
     try:
+        # cursor.execute(sqlzahtev)
+        # cursor.fetchall()
+        # #results = connection.cmd_query(sqlzahtev)
+        # records = cursor.fetchall()
+        # print("Total number of rows affected: ", cursor.rowcount)
+
+        # rCnt = 0
+        # if(records):
+        #     for row in records:
+        #         rCnt += 1
+        #         poruka = "Rows affected: \n"
+        #         poruka = poruka + rCnt + '. ' + row[0] + row[1] + row[2] + row[3]
+        # else:
+        #     rCnt = cursor.rowcount
+        #     poruka = "Number of rows affected: " + str(rCnt);    
+    
         cursor.execute(sqlzahtev)
-        cursor.fetchall()
+        #cursor.fetchall();
         #results = connection.cmd_query(sqlzahtev)
         records = cursor.fetchall()
         print("Total number of rows affected: ", cursor.rowcount)
-
+        
         rCnt = 0
-        if(records):
+        poruka = "Total number of rows affected: " + str(cursor.rowcount)
+        if(bool(records)):
             for row in records:
                 rCnt += 1
-                poruka = "Rows affected: \n"
-                poruka = poruka + rCnt + '. ' + row[0] + row[1] + row[2] + row[3]
+                poruka = poruka + '\n' + str(rCnt) + '. ' 
+                for i in range(0, len(row)):
+                    poruka = poruka + ' ' + str(row[i])
         else:
             rCnt = cursor.rowcount
-            poruka = "Number of rows affected: " + str(rCnt);        
+            poruka = "Number of rows affected: " + str(rCnt); 
+            
 
     except mysql.connector.Error as e:
         print("Error reading data from MySQL table", e)

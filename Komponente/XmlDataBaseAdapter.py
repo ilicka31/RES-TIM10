@@ -137,11 +137,11 @@ def BackToXml(poruka):
     payload = ""
     if("Number of rows affected" in poruka):
         status = 'SUCCESS'
-        status_code = '5000'
+        status_code = '2000'
         payload = poruka
     elif("Error reading data from MySQL table" in poruka):
         status = 'BAD_FORMAT'
-        status_code = '2000'
+        status_code = '5000'
         payload = poruka
     
     xmlOdgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>";
