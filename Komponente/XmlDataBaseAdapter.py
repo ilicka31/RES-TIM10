@@ -135,7 +135,7 @@ def BackToXml(poruka):
     status = ""
     status_code = ""
     payload = ""
-    if("Number of rows affected" in poruka):
+    if("rows affected" in poruka):
         status = 'SUCCESS'
         status_code = '2000'
         payload = poruka
@@ -182,8 +182,6 @@ while 1:
 
 #xmlzahtev = "<request><verb>GET</verb><noun>resurs</noun><query>id=5;naziv='mika'</query><fields>id; naziv; surname</fields></request>"
     sqlzahtev = ToSql(xmlzahtev)
-    print("SQLZAHTEVV")
-    print(sqlzahtev)
     if not sqlzahtev:
        break
     srep.send(sqlzahtev.encode())

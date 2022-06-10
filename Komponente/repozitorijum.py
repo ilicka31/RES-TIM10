@@ -75,7 +75,7 @@ while 1:
         if(bool(records)):
             for row in records:
                 rCnt += 1
-                poruka = poruka + '\n' + str(rCnt) + '. ' 
+                poruka = poruka + str(rCnt) + '. ' 
                 for i in range(0, len(row)):
                     poruka = poruka + ' ' + str(row[i])
         else:
