@@ -1,9 +1,8 @@
 from random import randint, random
 import sys
 sys.path.append("..")
-from Komponente.formatiranje import *
+from Komponente.formatiranje import format
 from Komponente.Zahtevi import *
-from Model.Resurs import *
 
 import socket
 import time
@@ -19,14 +18,11 @@ try:
     s.connect((TCP_IP, TCP_PORT))
 except socket.error as e:
     print(str(e))
-
-while 1:
-    for z in zahtevi:
-        MESSAGE = str(z)
-        s.send(MESSAGE.encode())
-        odgovor = s.recv(BUFFER_SIZE)
-        print("Vraceni podaci od servera:")
-        print(odgovor.decode())
-        time.sleep(3)
-    break
+for z in zahtevi:
+    MESSAGE = str(z)
+    s.send(MESSAGE.encode())
+    odgovor = s.recv(BUFFER_SIZE)
+    print("Vraceni podaci od servera:")
+    print(odgovor.decode())
+    time.sleep(3)
 s.close()

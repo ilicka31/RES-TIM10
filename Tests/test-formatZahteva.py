@@ -28,7 +28,7 @@ zahtev3 = {
 "fields": "id; name; surname"
 }
 
-def testFormat(self):
+def test_format(self):
     self.assertFalse(zahtev, "Verb is not valid")
     self.assertFalse(zahtev1, "Noun is missing")
     self.assertTrue(zahtev2)

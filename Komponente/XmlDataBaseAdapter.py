@@ -15,16 +15,16 @@ import argparse
 import re
 import sys
 
-def ToSql(data):
-    sqlZahtev = ""
+def to_sql(data):
+    sql_zahtev = ""
     verb = ""
     noun = ""
     fields = ""
     query = ""
 
-    xmlReq = data[10 : -10]
-    l = len(xmlReq)
-    glagol = xmlReq[5 : l]
+    xml_req = data[10 : -10]
+    l = len(xml_req)
+    glagol = xml_req[5 : l]
 
     for i in range(0, l):
         if(glagol[i] == '<'):
@@ -65,8 +65,8 @@ def ToSql(data):
 
     polja = ""
     vrednosti = ""
-    poljaL = []
-    vrednostiL = []
+    polja_l = []
+    vrednosti_l = []
     if(query != ""):
         jednako = 0
         zarez = 0
@@ -78,29 +78,29 @@ def ToSql(data):
                 else:
                     polja = polja + ", " + query[zarez+1:i]
                 jednako = i
-                poljaL.append(query[zarez:i])
+                polja_l.append(query[zarez:i])
             if(query[i] == ';'):
                 if(vrednosti == ""):
                      vrednosti = vrednosti + query[jednako+1 : i]
                 else:
                     vrednosti = vrednosti + ", " + query[jednako+1 : i]
-                vrednostiL.append(query[jednako+1 : i])
+                vrednosti_l.append(query[jednako+1 : i])
                 zarez = i
             if(i == l-1):
                 if(vrednosti == ""):
                      vrednosti = vrednosti + query[jednako+1 : i]
                 else:
                     vrednosti = vrednosti + ", " + query[jednako+1 : i+1]
-                vrednostiL.append(query[jednako+1 : i])
+                vrednosti_l.append(query[jednako+1 : i])
                 break
         
     uslov = ""
-    if("id" in poljaL):
-        for i in range(0, len(poljaL)):
-            if(poljaL[i] == "id"):
-                uslov = poljaL[i] + '=' + vrednostiL[i] + ";"
+    if("id" in polja_l):
+        for i in range(0, len(polja_l)):
+            if(polja_l[i] == "id"):
+                uslov = polja_l[i] + '=' + vrednosti_l[i] + ";"
 
-    #izmena = query - uslov[0:len(uslov)-1]
+    
 
     if(fields != ""):
         fields = fields.replace(';', ',')
@@ -108,26 +108,26 @@ def ToSql(data):
         fields = '*'
     if(verb == 'GET'):
         if(query != ""):
-            sqlZahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query.replace(";", " AND ")
+            sql_zahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query.replace(";", " AND ")
         else:
-            sqlZahtev = "SELECT" + fields + "FROM " + noun
+            sql_zahtev = "SELECT" + fields + "FROM " + noun
     elif(verb == 'POST'):
-        sqlZahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")" #treba da se dovrsi
+        sql_zahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")" #treba da se dovrsi
     elif(verb == 'PATCH'):
       
-        sqlZahtev = 'UPDATE ' + noun + ' SET ' + fields.replace(";", ", ") + ' WHERE ' + query.replace(";"," AND ")  
+        sql_zahtev = 'UPDATE ' + noun + ' SET ' + fields.replace(";", ", ") + ' WHERE ' + query.replace(";"," AND ")  
     elif(verb == 'DELETE'):
-        sqlZahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ")
+        sql_zahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ")
     else:
         print("Neadekvatan xml zahtev")
 
 
-    return sqlZahtev
+    return sql_zahtev
 
-def BackToXml(poruka):
+def back_to_xml(poruka):
     
     #preuzmi odgovor iz baze (kog je formata?) i dobavi vrednosti ovih polja:
-    #koneektuje se na repo, posalje sqlZahtev koji je prosledjen i preuzme odgovor koji se dalje parsira
+    #koneektuje se na repo, posalje sql_zahtev koji je prosledjen i preuzme odgovor koji se dalje parsira
 
     #1054 (42S22) exception code ukazuje na nepostojeca polja i kolone, tj los format zahteva
     
@@ -144,9 +144,9 @@ def BackToXml(poruka):
         status_code = '5000'
         payload = poruka
     
-    xmlOdgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>";
+    xml_odgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>";
 
-    return xmlOdgovor
+    return xml_odgovor
 
 
 
@@ -180,13 +180,12 @@ while 1:
     xmlzahtev = xmlzahtev.replace('<root>', '<request>')
     xmlzahtev = xmlzahtev.replace('</root>', '</request>')  
 
-#xmlzahtev = "<request><verb>GET</verb><noun>resurs</noun><query>id=5;naziv='mika'</query><fields>id; naziv; surname</fields></request>"
-    sqlzahtev = ToSql(xmlzahtev)
+    sqlzahtev = to_sql(xmlzahtev)
     if not sqlzahtev:
        break
     srep.send(sqlzahtev.encode())
     vraceniPodaci = srep.recv(BUFFER_SIZE)
-    vraceniPodaci = BackToXml(vraceniPodaci)
+    vraceniPodaci = back_to_xml(vraceniPodaci)
     scommbus.send(vraceniPodaci.encode())
 
 srep.close()

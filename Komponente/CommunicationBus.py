@@ -2,8 +2,7 @@ import sys
 import ast
 sys.path.append("..")
 from Komponente.formatiranje import format
-from Model.Resurs import *
-from Komponente.JsonXmlAdapter import *
+from Komponente.JsonXmlAdapter import to_json_from_xml, to_xml_from_json
 import socket
 
 TCP_IP = socket.gethostname() #localhost
@@ -34,10 +33,10 @@ while 1:
     j =ast.literal_eval(data.decode('utf-8'))
     z = format(j)
     if(z):
-        xml = ToXmlFromJson(j)
+        xml = to_xml_from_json(j)
         connAdapter.send(xml)  
         xmlodgovor = connAdapter.recv(BUFFER_SIZE)
-        odgovorBytes = ToJsonFromXml(xmlodgovor)
+        odgovorBytes = to_json_from_xml(xmlodgovor)
         connClient.send(odgovorBytes.encode())
 connAdapter.close()
 connClient.close()

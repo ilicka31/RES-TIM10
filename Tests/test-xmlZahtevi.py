@@ -18,7 +18,7 @@ zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><query>name='pera';typ
 
 
 class TestXmlDataBaseAdapter(unittest.TestCase):
-    def test_ToSql(self):
+    def test_to_sql(self):
         self.assertEquals(ToSql(zahtev1) , "SELECT id, name, surname FROM /resurs/1 WHERE name='pera' AND type=1")
         self.assertEquals(ToSql(zahtev2) , "SELECT * FROM /resurs/1 WHERE name='pera' AND type=1")
         #umesto print("nema polja fields") ubaciti neki exception zbog testiranja

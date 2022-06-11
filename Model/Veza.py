@@ -1,6 +1,6 @@
 class Veza:
-    def __init__(self, id, idPrvog, idDrugog, tip):
+    def __init__(self, id, id_prvog, id_drugog, tip):
         self.id=id
-        self.idPrvog=idPrvog
-        self.idDrugog=idDrugog
+        self.id_prvog=id_prvog
+        self.id_drugog=id_drugog
         self.tip=tip

@@ -3,7 +3,7 @@ import json
 import xmltodict
 import sys
 sys.path.append("..")
-from Komponente.formatiranje import *
+from Komponente.formatiranje import format
 
 class TestFormat(unittest.TestCase):
     def test_good_post(self):

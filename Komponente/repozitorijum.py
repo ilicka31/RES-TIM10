@@ -48,25 +48,7 @@ while 1:
         break
 
     try:
-        # cursor.execute(sqlzahtev)
-        # cursor.fetchall()
-        # #results = connection.cmd_query(sqlzahtev)
-        # records = cursor.fetchall()
-        # print("Total number of rows affected: ", cursor.rowcount)
-
-        # rCnt = 0
-        # if(records):
-        #     for row in records:
-        #         rCnt += 1
-        #         poruka = "Rows affected: \n"
-        #         poruka = poruka + rCnt + '. ' + row[0] + row[1] + row[2] + row[3]
-        # else:
-        #     rCnt = cursor.rowcount
-        #     poruka = "Number of rows affected: " + str(rCnt);    
-    
         cursor.execute(sqlzahtev)
-        #cursor.fetchall();
-        #results = connection.cmd_query(sqlzahtev)
         records = cursor.fetchall()
         print("Total number of rows affected: ", cursor.rowcount)
         
