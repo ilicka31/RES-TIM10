@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from multiprocessing.dummy import Value
 
 from typing import ByteString
 import xml.etree.ElementTree as ET
@@ -43,7 +44,7 @@ def to_sql(data):
     l1 = len(glagol)
 
     if(l1 == 0):
-        print('nema polja query i fields')
+        print('Nema polja query i fields')
     else:
         glagol = glagol[7 : l1]
         for i in range(0, l1):
@@ -54,7 +55,7 @@ def to_sql(data):
         glagol = glagol[8 : l1]
         l2 = len(glagol)
         if(l2 == 0):
-            print('nema polja fields')
+            print('Nema polja fields')
         else:
             glagol = glagol[8 : l2]
             for i in range(0, l2):
@@ -119,7 +120,7 @@ def to_sql(data):
     elif(verb == 'DELETE'):
         sql_zahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ")
     else:
-        print("Neadekvatan xml zahtev")
+        sql_zahtev='Neadekvatan xml zahtev'
 
 
     return sql_zahtev
@@ -171,8 +172,8 @@ except socket.error as e:
 while 1:
     xmlzahtev = scommbus.recv(BUFFER_SIZE)
     if not xmlzahtev: 
-       print("Puko sam jer nista nije stiglo")
-       break
+        print("Puko sam jer nista nije stiglo")
+        break
 
     xmlzahtev = xmlzahtev.decode()
     xmlzahtev = xmlzahtev.replace("&apos;","'")
@@ -181,6 +182,7 @@ while 1:
     xmlzahtev = xmlzahtev.replace('</root>', '</request>')  
 
     sqlzahtev = to_sql(xmlzahtev)
+    
     if not sqlzahtev:
        break
     srep.send(sqlzahtev.encode())

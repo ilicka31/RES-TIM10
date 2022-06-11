@@ -4,33 +4,49 @@ import sys
 
 sys.path.append('..')
 
-from Komponente.XmlDataBaseAdapter import ToSql
-
-
-zahtev1="<request><verb>GET</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
-
-zahtev2="<request><verb>GET</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
-zahtev3="<request><verb>GET</verb><noun>/resurs/1</noun></request>"
-zahtev4="<request><verb>DELETE</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
-zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
-zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
-
+from Komponente.XmlDataBaseAdapter import back_to_xml, to_sql
 
 
 class TestXmlDataBaseAdapter(unittest.TestCase):
-    def test_to_sql(self):
-        self.assertEquals(ToSql(zahtev1) , "SELECT id, name, surname FROM /resurs/1 WHERE name='pera' AND type=1")
-        self.assertEquals(ToSql(zahtev2) , "SELECT * FROM /resurs/1 WHERE name='pera' AND type=1")
-        #umesto print("nema polja fields") ubaciti neki exception zbog testiranja
-        #182, 184, 178, 174 su zakomentarisane linije u XmlDataBaseAdapteru da bi se moglo testirati
-        self.assertEquals(ToSql(zahtev3) , "SELECT*FROM /resurs/1")
-        #umesto printa da nema poja query i fields ubaaciti exception zbog testiranja
-        #razdvojiti select * from
-        self.assertEquals(ToSql(zahtev4) , "DELETE FROM /resurs/1 WHERE name='pera' AND type=1")
-        self.assertEquals(ToSql(zahtev5) , "INSERT INTO /resurs/1(name, type) VALUES ('pera', 1)")
-        #ubaciti spejs-------------------------------------------^ ovde
-        self.assertEquals(ToSql(zahtev6) , "UPDATE /resurs/1 SET name='pera',type=1 WHERE ")#nedovrseno
-        #ubaciti umesto posljednjeg elsa gde pise da je neispravan zahtev exception
+    def test_get(self):
+        zahtev1="<request><verb>GET</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        zahtev2="<request><verb>GET</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
+        zahtev3="<request><verb>GET</verb><noun>/resurs/1</noun></request>"
+        self.assertEqual(to_sql(zahtev1) , "SELECT id, name, surname FROM /resurs/1 WHERE name='pera' AND type=1")
+        self.assertEqual(to_sql(zahtev2) , "SELECT * FROM /resurs/1 WHERE name='pera' AND type=1")
+        self.assertEqual(to_sql(zahtev3) , "SELECT*FROM /resurs/1")
+        zahtev3="<request><verb>cao</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev3) , "Neadekvatan xml zahtev")
+        zahtev3=""
+        self.assertEqual(to_sql(zahtev3) , "Neadekvatan xml zahtev")
+
+    def test_delete(self):
+        zahtev4="<request><verb>DELETE</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
+        self.assertEqual(to_sql(zahtev4) , "DELETE FROM /resurs/1 WHERE name='pera' AND type=1")
+        zahtev4="<request><verb>cao</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
+        zahtev4=""
+        self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
+
+    def test_post(self):
+        zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev5) , "INSERT INTO /resurs/1(name, type) VALUES ('pera', 1)")
+        zahtev5="<request><verb>cao</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
+        zahtev5=""
+        self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
+    
+    def test_patch(self):
+        zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET id, name, surname WHERE name='pera' AND type=1")
+        zahtev6="<request><verb>CAO</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
+        zahtev6=""
+        self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
+
+#    def test_success(self):
+        #poruka=to_sql()
+        #self.assertEqual(back_to_xml(poruka), "<response><status>BAD_FORMAT</status> <status_code>5000</status_code> <payload>"+poruka+"</payload></response>")
 
 if __name__ == '__main__':
     unittest.main()
