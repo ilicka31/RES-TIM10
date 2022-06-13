@@ -1,15 +1,17 @@
 from doctest import OutputChecker
+from lib2to3.pgen2.token import NEWLINE
 from multiprocessing import connection
 import mysql.connector
 from mysql.connector import Error
 from setuptools import find_namespace_packages
 import socket
+import os
 
 try:
     connection = mysql.connector.connect(host='localhost',
                                         database='repo',
                                         user='root',
-                                        password='root')
+                                        password='lana.slovic24')
     if connection.is_connected():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server verison ", db_Info)
@@ -57,9 +59,11 @@ while 1:
         if(bool(records)):
             for row in records:
                 rCnt += 1
-                poruka = poruka + str(rCnt) + '. ' 
-                for i in range(0, len(row)):
-                    poruka = poruka + ' ' + str(row[i])
+                poruka = poruka + '\n' + str(rCnt) + '. ' 
+
+                red = str(row).replace('(', '{')
+                red = red.replace(')', '}')
+                poruka = poruka + red
         else:
             rCnt = cursor.rowcount
             poruka = "Number of rows affected: " + str(rCnt); 
