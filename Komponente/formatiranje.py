@@ -3,7 +3,7 @@ def format(data):
     noun = False
     if(data['verb'] == "GET" or data['verb']  == "POST" or data['verb']  == "PATCH" or data['verb']  == "DELETE"):
         verb = True
-    if(data['noun'] != ""):
+    if(data['noun'] == "student" or data['noun'] == "fakultet" or data['noun'] == "profesor"):
         noun = True
 
     if(noun == True and verb == True):
