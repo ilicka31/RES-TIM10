@@ -38,5 +38,13 @@ while 1:
         xmlodgovor = connAdapter.recv(BUFFER_SIZE)
         odgovorBytes = to_json_from_xml(xmlodgovor)
         connClient.send(odgovorBytes.encode())
+    else:
+        badformat =  {
+            "status": "BAD_FORMAT",
+            "status": "5000",
+            "payload": "Los zahtev sa klijentske strane"
+        }
+
+        connClient.send(badformat)
 connAdapter.close()
 connClient.close()

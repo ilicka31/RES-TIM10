@@ -140,11 +140,15 @@ def back_to_xml(poruka):
         status = 'SUCCESS'
         status_code = '2000'
         payload = poruka
-    elif("Error reading data from MySQL table" in poruka):
+    elif("Error reading data from MySQL table" in poruka or "an error in your SQL syntax" in poruka):
         status = 'BAD_FORMAT'
         status_code = '5000'
         payload = poruka
-    
+    elif("Error while connecting to MySQL" in poruka or "Error Code: 1062" in poruka):
+        status = 'REJECTED'
+        status_code = '3000'
+        payload = poruka
+
     xml_odgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>";
 
     return xml_odgovor
