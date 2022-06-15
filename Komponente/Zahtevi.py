@@ -78,7 +78,7 @@ zahtev12 = {
 "query": "naziv='PF'",
 "fields": ""
 }
-
+# Dva nepravilna zahteva jer su verb i noun obavezna polja
 zahtev13 = {
 "verb": "",
 "noun": "fakultet",
@@ -92,16 +92,47 @@ zahtev14 = {
 "query": "naziv='PF'",
 "fields": ""
 }
-
+# Dva nepravilna zahteva za get
 zahtev15 = {
 "verb": "GET",
 "noun": "fakultet",
-"query": "naziv='PF', ",
+"query": "naziv='PF'"
 }
 
 zahtev16 = {
 "verb": "GET",
+"noun": "fakultet",
+}
+# Dva nepravilna zahteva za post
+zahtev17 = {
+"verb": "POST",
 "noun": "student",
 "fields": "ime"
 }
 
+zahtev18 = {
+"verb": "POST",
+"noun": "fakultet",
+}
+# Dva nepravilna zahteva za patch
+zahtev19 = {
+"verb": "PATCH",
+"noun": "student",
+"fields": "ime"
+}
+
+zahtev20 = {
+"verb": "PATCH",
+"noun": "student",
+}
+# Dva nepravilna zahteva za delete
+zahtev21 = {
+"verb": "DELETE",
+"noun": "student",
+"fields": "ime"
+}
+
+zahtev22 = {
+"verb": "DELETE",
+"noun": "student"
+}

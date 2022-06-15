@@ -13,7 +13,7 @@ BUFFER_SIZE = 1024
 
 zahtevi=[zahtev1, zahtev2, zahtev3, zahtev4,zahtev5, zahtev6, zahtev7,
         zahtev8,zahtev9, zahtev10, zahtev11, zahtev12, zahtev13, zahtev14,
-        zahtev15, zahtev16]
+        zahtev15, zahtev16, zahtev17, zahtev18, zahtev19, zahtev20, zahtev21, zahtev22]
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
