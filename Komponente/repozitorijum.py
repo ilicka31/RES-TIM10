@@ -33,7 +33,7 @@ def konektuj_se(h, db,u, p):
             return [connection, cursor]
     except Error as e:
         print("Error while connecting to MySQL", e)
-        poruka = str(e).encode('utf-8')
+        poruka = "Error while connecting to MySQL" + str(e).encode('utf-8')
         return poruka
     #finally:
     #    if connection.is_connected():
