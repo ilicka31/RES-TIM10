@@ -27,6 +27,11 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
         zahtev4=""
         self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
+        zahtev4="<request><verb>DEKETE</verb><noun>/resurs/1</noun></request>"
+        self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
+        zahtev4="<request><verb>DELETE</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
+
 
     def test_post(self):
         zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
@@ -34,6 +39,12 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         zahtev5="<request><verb>cao</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
         self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
         zahtev5=""
+        self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
+        zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
+        zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
+        self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
+        zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun></request>"
         self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
     
     def test_patch(self):
@@ -43,10 +54,13 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
         zahtev6=""
         self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
+        zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
+        self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
+        zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
+        self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
+        zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun></request>"
+        self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
 
-#    def test_success(self):
-        #poruka=to_sql()
-        #self.assertEqual(back_to_xml(poruka), "<response><status>BAD_FORMAT</status> <status_code>5000</status_code> <payload>"+poruka+"</payload></response>")
 
 if __name__ == '__main__':
     unittest.main()
