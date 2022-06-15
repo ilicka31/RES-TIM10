@@ -78,3 +78,30 @@ zahtev12 = {
 "query": "naziv='PF'",
 "fields": ""
 }
+
+zahtev13 = {
+"verb": "",
+"noun": "fakultet",
+"query": "naziv='PF'",
+"fields": ""
+}
+
+zahtev14 = {
+"verb": "GET",
+"noun": "",
+"query": "naziv='PF'",
+"fields": ""
+}
+
+zahtev15 = {
+"verb": "GET",
+"noun": "fakultet",
+"query": "naziv='PF', ",
+}
+
+zahtev16 = {
+"verb": "GET",
+"noun": "student",
+"fields": "ime"
+}
+
