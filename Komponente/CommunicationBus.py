@@ -44,7 +44,9 @@ while 1:
             "status": "5000",
             "payload": "Los zahtev sa klijentske strane"
         }
+        badformatbytes= to_xml_from_json(badformat)
+        badformatbytessend =to_json_from_xml(badformatbytes)
 
-        connClient.send(badformat)
+        connClient.send(badformatbytessend.encode())
 connAdapter.close()
 connClient.close()
