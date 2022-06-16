@@ -2,6 +2,13 @@ from dicttoxml import dicttoxml
 import xmltodict 
 from json import dumps, loads
 
+zahtev1 = {
+"verb": "GET",
+"noun": "student",
+"query": "ime='Jelena';prezime='Ilic'", 
+"fields": "brindeksa; ime; prezime" 
+}
+
 def to_xml_from_json(zahtev):
    obj = dumps(zahtev)
    z = dicttoxml(loads(obj), attr_type=False)

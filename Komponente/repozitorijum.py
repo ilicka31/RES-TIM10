@@ -13,18 +13,18 @@ s.listen(0)
 
 connAdapter, addrAdapter = s.accept()
 print('Connection address:', addrAdapter,"\n")
-
-
+print("Repozitorijum konektovan sa XmlDataBaseAdapterom")
 while 1:
     sqlzahtev = connAdapter.recv(BUFFER_SIZE)
-    #sqlzahtev = "SELECT * from student"
+    print("Dobijen upit za bazu!")
     if not sqlzahtev:
         print("Nema vise zahteva")
         break
-    
     poruka = izvrsiupit(sqlzahtev,con)
+    print("Odgovor iz baze:")
     print(poruka)
-    connAdapter.send(poruka.encode('utf-8'))
+    connAdapter.send(poruka.encode())
+
 
 cur.close()
 con.close()  

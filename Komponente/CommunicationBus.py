@@ -34,19 +34,23 @@ while 1:
     z = format(j)
     if(z):
         xml = to_xml_from_json(j)
+        print("Zahtev klijenta u xml formatu:")
+        print(xml.decode())
         connAdapter.send(xml)  
         xmlodgovor = connAdapter.recv(BUFFER_SIZE)
+        print("Odgovor na klijentov zahtev u xml formatu:")
+        print(xmlodgovor.decode())
         odgovorBytes = to_json_from_xml(xmlodgovor)
         connClient.send(odgovorBytes.encode())
     else:
         badformat =  {
             "status": "BAD_FORMAT",
-            "status_code": "5000",
+            "status_code": "5000", #POPRAVITI
             "payload": "Los zahtev sa klijentske strane"
         }
         badformatbytes= to_xml_from_json(badformat)
         badformatbytessend =to_json_from_xml(badformatbytes)
-
         connClient.send(badformatbytessend.encode())
+
 connAdapter.close()
 connClient.close()

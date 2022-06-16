@@ -142,7 +142,7 @@ def back_to_xml(poruka):
 
     #1054 (42S22) exception code ukazuje na nepostojeca polja i kolone, tj los format zahteva
     
-    poruka = poruka.decode('utf-8')
+    poruka = poruka.decode()
     status = ""
     status_code = ""
     payload = ""
@@ -159,8 +159,7 @@ def back_to_xml(poruka):
         status_code = '3000'
         payload = poruka
 
-    xml_odgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>";
-
+    xml_odgovor = "<response><status>" + status + "</status> <status_code>" + status_code + "</status_code> <payload>"+payload+"</payload></response>"
     return xml_odgovor
 
 
@@ -200,8 +199,9 @@ while 1:
     if not sqlzahtev:
        break
     srep.send(sqlzahtev.encode())
-    vraceniPodaci = srep.recv(BUFFER_SIZE)
-    vraceniPodaci = back_to_xml(vraceniPodaci)
+    vraceni_podaci_iz_baze = srep.recv(BUFFER_SIZE)
+    print("Podaci vraceni iz baze!")
+    vraceniPodaci = back_to_xml(vraceni_podaci_iz_baze)
     scommbus.send(vraceniPodaci.encode())
 
 srep.close()

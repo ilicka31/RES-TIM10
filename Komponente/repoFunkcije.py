@@ -30,7 +30,7 @@ def izvrsiupit(sqlzahtev, conn):
         cursor = conn.cursor()
         cursor.execute(sqlzahtev)
         records = cursor.fetchall()
-        print("Total number of rows affected: ", cursor.rowcount)
+        #print("Total number of rows affected: ", cursor.rowcount)
         
         r_cnt = 0
         poruka = "Total number of rows affected: " + str(cursor.rowcount)
@@ -75,6 +75,6 @@ def izvrsiupit(sqlzahtev, conn):
             r_cnt = cursor.rowcount
             poruka = "Number of rows affected: " + str(r_cnt); 
     except mysql.connector.Error as e:
-        print("Error reading data from MySQL table", e)
+        #print("Error reading data from MySQL table", e)
         poruka = "Error reading data from MySQL table: " + e.msg
     return poruka

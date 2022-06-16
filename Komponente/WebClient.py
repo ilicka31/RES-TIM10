@@ -24,11 +24,12 @@ except socket.error as e:
 br=1
 for z in zahtevi:
     MESSAGE = str(z)
+    print("Saljem "+ str(br) +" zahtev.")
+    br+=1
+    print(MESSAGE)
     s.send(MESSAGE.encode())
     odgovor = s.recv(BUFFER_SIZE)
     print("Vraceni podaci od servera:")
-    print("Zahtev broj" +str(br)+" obradjen")
-    br+=1
     print(odgovor.decode())
     time.sleep(3)
 s.close()
