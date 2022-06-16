@@ -123,7 +123,7 @@ def to_sql(data):
         else:
             sql_zahtev = "SELECT" + fields + "FROM " + noun
     elif(verb == 'POST'):
-        sql_zahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")" #treba da se dovrsi
+        sql_zahtev = "INSERT INTO " + noun + "(" + polja + ")" + " VALUES (" + vrednosti + ")" 
     elif(verb == 'PATCH'):
       
         sql_zahtev = 'UPDATE ' + noun + ' SET ' + fields.replace(";", ", ") + ' WHERE ' + query.replace(";"," AND ")  
@@ -202,10 +202,19 @@ while 1:
     
     if not sqlzahtev:
        break
-    srep.send(sqlzahtev.encode())
-    vraceniPodaci = srep.recv(BUFFER_SIZE)
-    vraceniPodaci = back_to_xml(vraceniPodaci)
-    scommbus.send(vraceniPodaci.encode())
+
+    if sqlzahtev == "Neadekvatan xml zahtev":
+        vraceniPodaci = """<response>
+                                <status>BAD_FORMAT</status> 
+                                <status_code>5000</status_code> 
+                                <payload>Neadekvatan xml zahtev</payload>
+                            </response>""";
+        scommbus.send(vraceniPodaci.encode())
+    else:
+        srep.send(sqlzahtev.encode())
+        vraceniPodaci = srep.recv(BUFFER_SIZE)
+        vraceniPodaci = back_to_xml(vraceniPodaci)
+        scommbus.send(vraceniPodaci.encode())
 
 srep.close()
 scommbus.close()
