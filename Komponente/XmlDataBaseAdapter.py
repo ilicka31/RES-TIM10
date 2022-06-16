@@ -46,24 +46,34 @@ def to_sql(data):
     if(l1 == 0):
         print('Nema polja query i fields')
     else:
-        glagol = glagol[7 : l1]
-        for i in range(0, l1):
-            if(glagol[i] == '<'):
-                query = glagol[0:i]
-                glagol = glagol[i : l1]
-                break
-        glagol = glagol[8 : l1]
-        l2 = len(glagol)
-        if(l2 == 0):
-            print('Nema polja fields')
-        else:
-            glagol = glagol[8 : l2]
-            for i in range(0, l2):
+        #glagol = glagol[7 : l1]
+        if("query" in glagol):
+            glagol = glagol[7 : l1]
+            for i in range(0, l1):
                 if(glagol[i] == '<'):
-                    fields = glagol[0:i]
-                    glagol = glagol[i : l2]
+                    query = glagol[0:i]
+                    glagol = glagol[i : l1]
                     break
-
+            glagol = glagol[8 : l1]
+            l2 = len(glagol)
+            if(l2 == 0):
+                print('Nema polja fields')
+            else:
+                glagol = glagol[8 : l2]
+                for i in range(0, l2):
+                    if(glagol[i] == '<'):
+                        fields = glagol[0:i]
+                        glagol = glagol[i : l2]
+                        break
+        else:
+            if("fields" in glagol):
+                l3 = len(glagol)
+                glagol = glagol[8 : l3]
+                for i in range(0, l3):
+                    if(glagol[i] == '<'):
+                        fields = glagol[0:i]
+                        glagol = glagol[i : l3]
+                        break
     polja = ""
     vrednosti = ""
     polja_l = []
@@ -106,7 +116,7 @@ def to_sql(data):
     if(fields != ""):
         fields = fields.replace(';', ',')
     else:
-        fields = '*'
+        fields = "*"
     if(verb == 'GET'):
         if(query != ""):
             sql_zahtev = "SELECT " + fields + " FROM " + noun + " WHERE " + query.replace(";", " AND ")
@@ -140,11 +150,11 @@ def back_to_xml(poruka):
         status = 'SUCCESS'
         status_code = '2000'
         payload = poruka
-    elif("Error reading data from MySQL table" in poruka or "an error in your SQL syntax" in poruka):
+    elif("an error in your SQL syntax" in poruka or "doesn't have a default value"):
         status = 'BAD_FORMAT'
         status_code = '5000'
         payload = poruka
-    elif("Error while connecting to MySQL" in poruka or "Error Code: 1062" in poruka):
+    elif("Error while connecting to MySQL" in poruka or "Error Code: 1062" in poruka or "Error Code: 1175" in poruka):
         status = 'REJECTED'
         status_code = '3000'
         payload = poruka

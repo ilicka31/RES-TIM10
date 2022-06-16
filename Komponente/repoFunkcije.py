@@ -34,14 +34,43 @@ def izvrsiupit(sqlzahtev, conn):
         
         r_cnt = 0
         poruka = "Total number of rows affected: " + str(cursor.rowcount)
+
+        zahtev = sqlzahtev.decode('utf-8')
+        tabela = 0
+        noun = ""
+        fields = ''
+        if("SELECT" in zahtev):
+            for i in range(0, len(zahtev)):
+                if(zahtev[i : i+4] == "FROM"):
+                    fields = sqlzahtev[7 : i-1]
+                    tabela = i + 5
+                if(zahtev[i:i+5] == "WHERE"):
+                    noun = zahtev[tabela : i-1]
+                    break
+                elif(i == len(zahtev)-1):
+                    noun = zahtev[tabela:len(zahtev)]
+
+            fields = fields.decode('utf-8')
+            if(fields == "*" or fields == ''):
+                if(noun == "student"):
+                    fields = "idstudent, ime, prezime, brindeksa"
+                elif(noun == "profesor"):
+                    fields = "idprofesor, ime, prezime, predmet"
+                elif(noun == "fakultet"):
+                    fields = "idfakultet, naziv, brojstudenata, grad"
+
+            polja = fields.split(",")
+
         if(bool(records)):
             for row in records:
                 r_cnt += 1
                 poruka = poruka + '\n' + str(r_cnt) + '. ' 
 
-                red = str(row).replace('(', '{')
-                red = red.replace(')', '}')
-                poruka = poruka + red
+                poruka = poruka + noun + ": { \n"
+                for i in range(0, len(polja)):
+                    poruka = poruka + '"' + str(polja[i]) + "\" : \"" + str(row[i]) + '" \n'
+               
+                poruka = poruka + "}"
         else:
             r_cnt = cursor.rowcount
             poruka = "Number of rows affected: " + str(r_cnt); 

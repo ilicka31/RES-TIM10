@@ -14,11 +14,14 @@ s.listen(0)
 connAdapter, addrAdapter = s.accept()
 print('Connection address:', addrAdapter,"\n")
 
+
 while 1:
     sqlzahtev = connAdapter.recv(BUFFER_SIZE)
+    #sqlzahtev = "SELECT * from student"
     if not sqlzahtev:
         print("Nema vise zahteva")
         break
+    
     poruka = izvrsiupit(sqlzahtev,con)
     print(poruka)
     connAdapter.send(poruka.encode('utf-8'))

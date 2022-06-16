@@ -41,7 +41,7 @@ while 1:
     else:
         badformat =  {
             "status": "BAD_FORMAT",
-            "status": "5000",
+            "status_code": "5000",
             "payload": "Los zahtev sa klijentske strane"
         }
         badformatbytes= to_xml_from_json(badformat)
