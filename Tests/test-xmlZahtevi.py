@@ -30,7 +30,7 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         zahtev4="<request><verb>DEKETE</verb><noun>/resurs/1</noun></request>"
         self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
         zahtev4="<request><verb>DELETE</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
-        self.assertEqual(to_sql(zahtev4) , "DELETE FROM /resurs/1 WHERE ")#NEADKVATAN XML ZAHTEV
+        self.assertEqual(to_sql(zahtev4) , "DELETE FROM /resurs/1")#NEADKVATAN XML ZAHTEV
 
 
     def test_post(self):
