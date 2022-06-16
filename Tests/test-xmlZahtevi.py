@@ -4,7 +4,7 @@ import sys
 
 sys.path.append('..')
 
-from Komponente.XmlDataBaseAdapter import back_to_xml, to_sql
+from Komponente.DataAdapterFunkcije import back_to_xml, to_sql
 
 
 class TestXmlDataBaseAdapter(unittest.TestCase):
