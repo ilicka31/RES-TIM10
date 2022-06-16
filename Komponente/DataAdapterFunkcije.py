@@ -128,7 +128,10 @@ def to_sql(data):
       
         sql_zahtev = 'UPDATE ' + noun + ' SET ' + fields.replace(";", ", ") + ' WHERE ' + query.replace(";"," AND ")  
     elif(verb == 'DELETE'):
-        sql_zahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ")
+        if(query != ""):
+            sql_zahtev = 'DELETE FROM ' + noun + " WHERE " + query.replace(";", " AND ")
+        else:
+            sql_zahtev = "DELETE FROM " + noun
     else:
         sql_zahtev='Neadekvatan xml zahtev'
 

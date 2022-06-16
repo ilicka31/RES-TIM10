@@ -32,7 +32,7 @@ def izvrsiupit(sqlzahtev, conn):
         records = cursor.fetchall()
         #print("Total number of rows affected: ", cursor.rowcount)
         
-        r_cnt = 0
+        
         poruka = "Total number of rows affected: " + str(cursor.rowcount)
 
         zahtev = sqlzahtev.decode('utf-8')
@@ -63,12 +63,12 @@ def izvrsiupit(sqlzahtev, conn):
 
         if(bool(records)):
             for row in records:
-                r_cnt += 1
-                poruka = poruka + '\n' + str(r_cnt) + '. ' 
+               
+                poruka = poruka + '\n'
 
                 poruka = poruka + noun + ": { \n"
                 for i in range(0, len(polja)):
-                    poruka = poruka + '"' + str(polja[i]) + "\" : \"" + str(row[i]) + '" \n'
+                    poruka = poruka + '"' + str(polja[i]) + "\" : \"" + str(row[i]) + '", \n'
                
                 poruka = poruka + "}"
         else:
