@@ -1,7 +1,6 @@
 import socket
-from repoFunkcije import konektuj_se, config, izvrsiupit
+from repoFunkcije import  izvrsiupit
 ####KONEKCIJA SA BAZOM
-[con, cur] = konektuj_se(config)
 ####KONEKCIJA SA XMLADAPTEROM
 TCP_IP = socket.gethostname()
 TCP_PORT2 = 8007
@@ -20,12 +19,9 @@ while 1:
     if not sqlzahtev:
         print("Nema vise zahteva")
         break
-    poruka = izvrsiupit(sqlzahtev,con)
+    poruka = izvrsiupit(sqlzahtev.decode())
     print("Odgovor iz baze:")
     print(poruka)
     connAdapter.send(poruka.encode())
 
-
-cur.close()
-con.close()  
 connAdapter.close()

@@ -1,15 +1,16 @@
-from mockdb import MockDB, configuration
-from mock import patch
+from mockdb import MockDB
+import unittest
 import sys
 sys.path.insert(0, "../..")
-from Komponente.repoFunkcije import izvrsiupit, konektuj_se
+from Komponente.repoFunkcije import izvrsiupit
 
-conn, cur = konektuj_se(configuration)
+
 class TestBaza(MockDB):
-    def test_izvrsiupit(self):
+    def test_succsess(self):
         with self.mock_db_config:
-            self.assertEqual(izvrsiupit("""SELECT `idstudent`, `ime`, `prezime`, `brojindeksa` FROM `test_table` WHERE
-                            idstudent = '1' """, conn), """Total number of rows affected: 1 1. {'6', 'Marko', 'Markovic','RA22/2017'}""")
+            self.assertEqual(izvrsiupit("""SELECT `idstudent`, `ime`, `prezime`, `brojindeksa` FROM `student` WHERE idstudent = '1' """), """Total number of rows affected: 1 1. {'6', 'Marko', 'Markovic','RA22/2017'}""")
 #           # self.assertEqual(utils.db_write("""DELETE FROM `test_table` WHERE id='1' """), True)
 #           # self.assertEqual(utils.db_write("""DELETE FROM `test_table` WHERE id='4' """), True)
 #
+if __name__ == '__main__':
+    unittest.main()
