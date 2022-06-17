@@ -18,7 +18,7 @@ def izvrsiupit(sqlzahtev):
         #print("Total number of rows affected: ", cursor.rowcount)
         
         
-        poruka = "Total number of rows affected: " + str(cursor.rowcount)
+        poruka = "Total number of rows affected: " + str(cursor.rowcount) +" "
 
         zahtev = sqlzahtev
         tabela = 0
@@ -38,7 +38,7 @@ def izvrsiupit(sqlzahtev):
             #fields = fields.decode('utf-8')
             if(fields == "*" or fields == ''):
                 if(noun == "student"):
-                    fields = "idstudent, ime, prezime, brindeksa"
+                    fields = "idstudent, ime, prezime, brojindeksa"
                 elif(noun == "profesor"):
                     fields = "idprofesor, ime, prezime, predmet"
                 elif(noun == "fakultet"):
@@ -50,16 +50,17 @@ def izvrsiupit(sqlzahtev):
             for row in records:
                
                 poruka = poruka + '\n'
-
                 poruka = poruka + noun + ": { \n"
                 for i in range(0, len(polja)):
                     poruka = poruka + '"' + str(polja[i]) + "\" : \"" + str(row[i]) + '", \n'
                
                 poruka = poruka + "}"
+             
         else:
             r_cnt = cursor.rowcount
             poruka = "Number of rows affected: " + str(r_cnt); 
     except mysql.connector.Error as e:
         #print("Error reading data from MySQL table", e)
         poruka = "Error reading data from MySQL table: " + e.msg
-    return poruka
+    return str(poruka)
+
