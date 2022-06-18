@@ -1,9 +1,7 @@
 import unittest
-import json
-import xmltodict
 import sys
 sys.path.append("..")
-from Komponente.formatiranje import *
+from Komponente.formatiranje import format
 
 
 class testformat(unittest.TestCase):
@@ -136,71 +134,6 @@ class testformat(unittest.TestCase):
             "fields": "brindeksa; ime; prezime" 
             }
         self.assertFalse(format(primer), "Noun is wrong")
-    #sta dalje
-    # def test_wrong5(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong6(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong7(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong8(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong9(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong10(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong11(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
-    # def test_wrong12(self):
-    #     primer = {
-    #         "verb": "",
-    #         "noun": "student",
-    #         "query": "ime='Jelena';prezime='Ilic'", 
-    #         "fields": "brindeksa; ime; prezime" 
-    #         }
-    #     self.assertFalse(format(primer), "Verb missing")
 
 if __name__ == "__main__":
     unittest.main()

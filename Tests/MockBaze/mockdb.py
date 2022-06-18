@@ -1,10 +1,9 @@
 from unittest import TestCase
 import mysql.connector
-from mysql.connector import errorcode
 from mock import patch
 import sys
 sys.path.insert(0, "../..")
-from Komponente.repoFunkcije import *
+from Komponente.repoFunkcije import config
 
 MYSQL_USER = "root"
 MYSQL_PASSWORD = "root"
@@ -15,69 +14,94 @@ MYSQL_PORT = "3306"
 configuration = {
     'host': MYSQL_HOST,
     'user': MYSQL_USER,
-    'password': MYSQL_PASSWORD,
-    'database': MYSQL_DB
+    'password': MYSQL_PASSWORD
+    #'database': MYSQL_DB
 }
 class MockDB(TestCase):
     @classmethod
     def setUpClass(cls):
-        cnx = mysql.connector.connect(**configuration)
+        cnx = mysql.connector.connect(host = MYSQL_HOST,
+                                      user= MYSQL_USER,
+                                      password = MYSQL_PASSWORD)
         cursor = cnx.cursor()
 
-       # try:
-       #     cursor.execute("DROP DATABASE IF EXISTS {}".format(MYSQL_DB))
-       #     cursor.close()
-       #     print("DB dropped")
-       # except mysql.connector.Error as err:
-       #     print("{}{}".format(MYSQL_DB, err))
-#
-       # cursor = cnx.cursor()
         try:
-            cursor.execute("CREATE DATABASE IF NOT EXISTS " + MYSQL_DB)
+            cursor.execute("CREATE DATABASE IF NOT EXISTS testdb")
             cnx.commit()
-            print("KREIRO")
             cursor.close()
         except mysql.connector.Error as err:
-            print("Failed creating database: " + str(err))
-            exit(1)
-        
+            print("Failed creating database: " + err.msg)
+            
 
-        query = """CREATE TABLE `student` (
+        cursor= cnx.cursor()
+        cursor.execute("use testdb")
+        cursor.close()
+
+        querys = """CREATE TABLE IF NOT EXISTS `student` (
                   `idstudent` integer NOT NULL PRIMARY KEY ,
                   `ime` varchar(30) NOT NULL,
                   `prezime` varchar(30) NOT NULL,
                   `brojindeksa` varchar(30) NOT NULL
                 )"""
-        try:
-            cursor=cnx.cursor()
-            cursor.execute(query)
-            print("KREIRO test tablu")
-            cnx.commit()
-            cursor.close()
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("test_table already exists.")
-            else:
-                print(err.msg)
-        else:
-            print("OK")
 
-        insert_data_query = """INSERT INTO `student` (`idstudent`, `ime`, `prezime`,`brojindeksa`) VALUES
-                            ('1', 'Marko', 'Markovic','RA22/2017'),
-                            ('2', 'Janko','Jankovic','SW55/2018'),
-                            ('3', 'Stanko','Stankovic','SW45/2019'),
-                            ('4', 'Darko','Darkovic','IN55/2018'),
-                            ('5', 'Petko','Petkovic','IT28/2018')
+        queryp = """CREATE TABLE IF NOT EXISTS `profesor` (
+                  `idprofesor` integer NOT NULL PRIMARY KEY ,
+                  `ime` varchar(30) NOT NULL,
+                  `prezime` varchar(30) NOT NULL,
+                  `predmet` varchar(30) NOT NULL
+                )"""
+
+        queryf = """CREATE TABLE IF NOT EXISTS `fakultet` (
+                  `idfakultet` integer NOT NULL PRIMARY KEY ,
+                  `naziv` varchar(30) NOT NULL,
+                  `brojstudenata` integer NOT NULL,
+                  `grad` varchar(30) NOT NULL
+                )"""
+
+        query = [querys, queryp, queryf]
+        for q in query:
+            try:
+                cursor=cnx.cursor()
+                cursor.execute(q)
+                cnx.commit()
+                cursor.close()
+            except mysql.connector.Error as err:
+                    print("Failed create table"+err.msg)
+
+
+        inserts = """INSERT INTO `student` VALUES
+                            (1, 'Marko', 'Markovic', 'RA22/2017'),
+                            (2, 'Janko','Jankovic', 'SW55/2018'),
+                            (3, 'Stanko','Stankovic', 'SW45/2019'),
+                            (4, 'Darko','Darkovic', 'IN55/2018'),
+                            (5, 'Petko','Petkovic', 'IT28/2018');
                             """
-        try:
-            cursor= cnx.cursor()
-            cursor.execute(insert_data_query)
-            cnx.commit()
-            cursor.close()
-            print("INSERTOVO")
-        except mysql.connector.Error as err:
-            print("Data insertion to test_table failed \n" + err)
+        insertp = """INSERT INTO `profesor` VALUES
+                            (1,'Milana','Bojanic','SCADA'),
+                            (2,'Milos','Markovic','WEB'),
+                            (3,'Imre','Lendak','ADS'),
+                            (4,'Ivan','Kastelan','LPRS'),
+                            (5,'Petar','Maric','PJISP');
+                            """
+        insertf = """INSERT INTO `fakultet` VALUES
+                            (1,'FTN',15000,'Novi Sad'),
+                            (2,'ETF',10000,'Beograd'),
+                            (3,'FON',7000,'Beograd'),
+                            (4,'PMF',5000,'Novi Sad'),
+                            (5,'TMF',9000,'Novi Sad');
+                            """
+
+        insetr = [inserts, insertp, insertf]
+        for i in insetr:
+            try:
+                cursor= cnx.cursor()
+                cursor.execute(i)
+                cnx.commit()
+                cursor.close()
+            except mysql.connector.Error as err:
+                print("Data insertion to student failed \n" + err.msg)
         
+
         
 
         testconfig ={
@@ -100,12 +124,11 @@ class MockDB(TestCase):
 
         # drop test database
         try:
-            cursor.execute("DROP DATABASE"+ MYSQL_DB)
+            cursor.execute("DROP DATABASE "+ MYSQL_DB)
             cnx.commit()
            
-        except mysql.connector.Error as err:
+        except mysql.connector.Error:
             print("Database {} does not exists. Dropping db failed".format(MYSQL_DB))
         cursor.close()
         cnx.close()
-
 

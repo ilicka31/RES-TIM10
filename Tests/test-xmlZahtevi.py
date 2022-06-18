@@ -30,7 +30,7 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         zahtev4="<request><verb>DEKETE</verb><noun>/resurs/1</noun></request>"
         self.assertEqual(to_sql(zahtev4) , "Neadekvatan xml zahtev")
         zahtev4="<request><verb>DELETE</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
-        self.assertEqual(to_sql(zahtev4) , "DELETE FROM /resurs/1 WHERE ")#NEADKVATAN XML ZAHTEV
+        self.assertEqual(to_sql(zahtev4) , "DELETE FROM /resurs/1")
 
 
     def test_post(self):
@@ -41,11 +41,11 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         zahtev5=""
         self.assertEqual(to_sql(zahtev5) , "Neadekvatan xml zahtev")
         zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
-        self.assertEqual(to_sql(zahtev5) , "INSERT INTO /resurs/1() VALUES ()")#NEADEKVATAN XML ZAHTEV
+        self.assertEqual(to_sql(zahtev5) , "INSERT INTO /resurs/1() VALUES ()")
         zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
         self.assertEqual(to_sql(zahtev5) , "INSERT INTO /resurs/1(name, type) VALUES ('pera', 1)")
         zahtev5="<request><verb>POST</verb><noun>/resurs/1</noun></request>"
-        self.assertEqual(to_sql(zahtev5) , "INSERT INTO /resurs/1() VALUES ()")#NEADEKVATAN XML ZAHTEV
+        self.assertEqual(to_sql(zahtev5) , "INSERT INTO /resurs/1() VALUES ()")
     
     def test_patch(self):
         zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><query>name='pera';type=1</query><fields>id; name; surname</fields></request>"
@@ -55,9 +55,9 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         zahtev6=""
         self.assertEqual(to_sql(zahtev6) , "Neadekvatan xml zahtev")
         zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><fields>id; name; surname</fields></request>"
-        self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET id, name, surname WHERE ")#NEADEKVATAN XML ZAHTEV TREBA
+        self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET id, name, surname WHERE ")
         zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun><query>name='pera';type=1</query></request>"
-        self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET * WHERE name='pera' AND type=1")#NEADEKVATAN XML ZAHTEV
+        self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET * WHERE name='pera' AND type=1")
         zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun></request>"
         self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET * WHERE ")
 

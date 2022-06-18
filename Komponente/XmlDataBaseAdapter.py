@@ -1,14 +1,5 @@
-from asyncio.windows_events import NULL
-from multiprocessing.dummy import Value
-
-from typing import ByteString
-import xml.etree.ElementTree as ET
-import mysql.connector
-
-#ovde treba da imam vezu sa bazom i jedan fajl u kom cu
-#privremeno da cuvam xml parsiran iz JSON-a
-
 import socket
+<<<<<<< HEAD
 import random
 import time
 
@@ -162,6 +153,9 @@ def back_to_xml(poruka):
     return xml_odgovor
 
 
+=======
+from DataAdapterFunkcije import back_to_xml, to_sql
+>>>>>>> cc2a112f609095e726d763a61d5f8c682490607f
 
 ####KONEKCIJA SA COMMBUS
 TCP_IP = socket.gethostname()
