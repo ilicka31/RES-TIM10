@@ -1,6 +1,5 @@
 from unittest import TestCase
 import mysql.connector
-from mysql.connector import errorcode
 from mock import patch
 import sys
 sys.path.insert(0, "../..")
@@ -128,7 +127,7 @@ class MockDB(TestCase):
             cursor.execute("DROP DATABASE "+ MYSQL_DB)
             cnx.commit()
            
-        except mysql.connector.Error as err:
+        except mysql.connector.Error:
             print("Database {} does not exists. Dropping db failed".format(MYSQL_DB))
         cursor.close()
         cnx.close()

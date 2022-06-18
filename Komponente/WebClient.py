@@ -1,4 +1,3 @@
-from random import randint, random
 import sys
 sys.path.append("..")
 from Komponente.formatiranje import format

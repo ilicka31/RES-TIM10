@@ -1,5 +1,3 @@
-import json
-
 zahtev1 = {
 "verb": "GET",
 "noun": "student",

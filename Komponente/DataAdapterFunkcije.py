@@ -1,21 +1,3 @@
-from asyncio.windows_events import NULL
-from multiprocessing.dummy import Value
-
-from typing import ByteString
-import xml.etree.ElementTree as ET
-import mysql.connector
-
-#ovde treba da imam vezu sa bazom i jedan fajl u kom cu
-#privremeno da cuvam xml parsiran iz JSON-a
-
-import socket
-import random
-import time
-
-import argparse
-import re
-import sys
-
 def to_sql(data):
     sql_zahtev = ""
     verb = ""
@@ -46,7 +28,6 @@ def to_sql(data):
     if(l1 == 0):
         print('Nema polja query i fields')
     else:
-        #glagol = glagol[7 : l1]
         if("query" in glagol):
             glagol = glagol[7 : l1]
             for i in range(0, l1):
@@ -105,12 +86,6 @@ def to_sql(data):
                 vrednosti_l.append(query[jednako+1 : i])
                 break
         
-    uslov = ""
-    if("id" in polja_l):
-        for i in range(0, len(polja_l)):
-            if(polja_l[i] == "id"):
-                uslov = polja_l[i] + '=' + vrednosti_l[i] + ";"
-
     
 
     if(fields != ""):

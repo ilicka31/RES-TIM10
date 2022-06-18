@@ -1,6 +1,4 @@
-from multiprocessing import connection
 import mysql.connector
-from mysql.connector import Error
 
 config = {
     'host': "localhost",
@@ -35,7 +33,6 @@ def izvrsiupit(sqlzahtev):
                 elif(i == len(zahtev)-1):
                     noun = zahtev[tabela:len(zahtev)]
 
-            #fields = fields.decode('utf-8')
             if(fields == "*" or fields == ''):
                 if(noun == "student"):
                     fields = "idstudent, ime, prezime, brojindeksa"
