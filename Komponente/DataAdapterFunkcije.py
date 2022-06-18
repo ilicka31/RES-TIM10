@@ -119,7 +119,7 @@ def back_to_xml(poruka):
         status = 'SUCCESS'
         status_code = '2000'
         payload = poruka
-    elif("an error in your SQL syntax" in poruka or "doesn't have a default value"):
+    elif("an error in your SQL syntax" in poruka or "doesn't have a default value" in poruka):
         status = 'BAD_FORMAT'
         status_code = '5000'
         payload = poruka

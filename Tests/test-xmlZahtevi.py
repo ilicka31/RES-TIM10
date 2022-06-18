@@ -1,6 +1,8 @@
+from this import d
 import unittest
 import sys
-
+from dicttoxml import dicttoxml
+import xmltodict 
 
 sys.path.append('..')
 
@@ -60,6 +62,25 @@ class TestXmlDataBaseAdapter(unittest.TestCase):
         self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET * WHERE name='pera' AND type=1")
         zahtev6="<request><verb>PATCH</verb><noun>/resurs/1</noun></request>"
         self.assertEqual(to_sql(zahtev6) , "UPDATE /resurs/1 SET * WHERE ")
+    
+    def test_success(self):
+        poruka="response : status: SUCCESS, status_code: 2000, payload: Total number of rows affected: 1 student: { brindeksa : PR24/2019,  ime : Jelena,  prezime : Ilic}"
+        self.assertEqual(back_to_xml(poruka.encode()), "<response><status>SUCCESS</status> <status_code>2000</status_code> <payload>response : status: SUCCESS, status_code: 2000, payload: Total number of rows affected: 1 student: { brindeksa : PR24/2019,  ime : Jelena,  prezime : Ilic}</payload></response>")
+
+
+    def test_bad_format(self):
+        poruka="status: BAD_FORMAT, status_code: 5000, payload: Error reading data from MySQL table: Field 'idstudent' doesn't have a default value"
+        self.assertEqual(back_to_xml(poruka.encode()), "<response><status>BAD_FORMAT</status> <status_code>5000</status_code> <payload>status: BAD_FORMAT, status_code: 5000, payload: Error reading data from MySQL table: Field 'idstudent' doesn't have a default value</payload></response>")
+        poruka="status: BAD_FORMAT, status_code: 5000, payload: Error reading data from MySQL table: You have an error in your SQL syntax; "
+        self.assertEqual(back_to_xml(poruka.encode()), "<response><status>BAD_FORMAT</status> <status_code>5000</status_code> <payload>status: BAD_FORMAT, status_code: 5000, payload: Error reading data from MySQL table: You have an error in your SQL syntax; </payload></response>")
+
+    def test_rejected(self):
+        poruka="status: REJECTED, status_code: 3000, payload: Error Code: 1062"
+        self.assertEqual(back_to_xml(poruka.encode()), "<response><status>REJECTED</status> <status_code>3000</status_code> <payload>status: REJECTED, status_code: 3000, payload: Error Code: 1062</payload></response>")
+        poruka="status: REJECTED, status_code: 3000, payload: Error Code: 1175"
+        self.assertEqual(back_to_xml(poruka.encode()), "<response><status>REJECTED</status> <status_code>3000</status_code> <payload>status: REJECTED, status_code: 3000, payload: Error Code: 1175</payload></response>")
+        poruka="status: REJECTED, status_code: 3000, payload: Error while connecting to MySQL"
+        self.assertEqual(back_to_xml(poruka.encode()), "<response><status>REJECTED</status> <status_code>3000</status_code> <payload>status: REJECTED, status_code: 3000, payload: Error while connecting to MySQL</payload></response>")
 
 
 if __name__ == '__main__':
