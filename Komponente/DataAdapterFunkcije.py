@@ -25,9 +25,7 @@ def to_sql(data):
     glagol = glagol[7 : l]
     l1 = len(glagol)
 
-    if(l1 == 0):
-        print('Nema polja query i fields')
-    else:
+    if(l1 != 0):
         if("query" in glagol):
             glagol = glagol[7 : l1]
             for i in range(0, l1):
@@ -37,9 +35,7 @@ def to_sql(data):
                     break
             glagol = glagol[8 : l1]
             l2 = len(glagol)
-            if(l2 == 0):
-                print('Nema polja fields')
-            else:
+            if(l2 != 0):
                 glagol = glagol[8 : l2]
                 for i in range(0, l2):
                     if(glagol[i] == '<'):
@@ -114,11 +110,6 @@ def to_sql(data):
     return sql_zahtev
 
 def back_to_xml(poruka):
-    
-    #preuzmi odgovor iz baze (kog je formata?) i dobavi vrednosti ovih polja:
-    #koneektuje se na repo, posalje sql_zahtev koji je prosledjen i preuzme odgovor koji se dalje parsira
-
-    #1054 (42S22) exception code ukazuje na nepostojeca polja i kolone, tj los format zahteva
     
     poruka = poruka.decode()
     status = ""

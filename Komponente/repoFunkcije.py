@@ -3,7 +3,7 @@ import mysql.connector
 config = {
     'host': "localhost",
     'user': "root",
-    'password': "root",
+    'password': "lana.slovic24",
     'database': "repo"
 }
 
@@ -13,7 +13,6 @@ def izvrsiupit(sqlzahtev):
         cursor = conn.cursor()
         cursor.execute(sqlzahtev)
         records = cursor.fetchall()
-        #print("Total number of rows affected: ", cursor.rowcount)
         
         
         poruka = "Total number of rows affected: " + str(cursor.rowcount) +" "
@@ -57,7 +56,6 @@ def izvrsiupit(sqlzahtev):
             r_cnt = cursor.rowcount
             poruka = "Number of rows affected: " + str(r_cnt); 
     except mysql.connector.Error as e:
-        #print("Error reading data from MySQL table", e)
         poruka = "Error reading data from MySQL table: " + e.msg
     return str(poruka)
 
