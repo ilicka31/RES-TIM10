@@ -43,10 +43,7 @@ def to_sql(data):
     glagol = glagol[7 : l]
     l1 = len(glagol)
 
-    if(l1 == 0):
-        print('Nema polja query i fields')
-    else:
-        #glagol = glagol[7 : l1]
+    if(l1 != 0):
         if("query" in glagol):
             glagol = glagol[7 : l1]
             for i in range(0, l1):
@@ -56,9 +53,7 @@ def to_sql(data):
                     break
             glagol = glagol[8 : l1]
             l2 = len(glagol)
-            if(l2 == 0):
-                print('Nema polja fields')
-            else:
+            if(l2 != 0):
                 glagol = glagol[8 : l2]
                 for i in range(0, l2):
                     if(glagol[i] == '<'):
